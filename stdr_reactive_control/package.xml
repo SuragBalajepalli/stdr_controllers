@@ -1,8 +1,8 @@
 <?xml version="1.0"?>
 <package>
-  <name>stdr_controllers</name>
+  <name>stdr_reactive_control</name>
   <version>0.0.0</version>
-  <description>The stdr_open_loop_control package</description>
+  <description>The stdr_reactive_control package</description>
   
   <!-- One maintainer tag required, multiple allowed, one person per tag -->
   <!-- Example:  -->
