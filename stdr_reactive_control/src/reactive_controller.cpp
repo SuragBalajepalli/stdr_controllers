@@ -2,7 +2,7 @@
 #include <geometry_msgs/Twist.h>
 #include <std_msgs/Bool.h> // boolean message
 
-bool g_lidar_left_alarm=false, g_lidar_right_alarm; // global var for lidar alarm
+bool g_lidar_left_alarm=false, g_lidar_right_alarm=false; // global var for lidar alarm
 
 void left_alarmCallback(const std_msgs::Bool& alarm_msg) 
 { 
@@ -30,9 +30,9 @@ int main(int argc, char **argv) {
     ros::Subscriber alarm_subscriber2 = n.subscribe("right_lidar_alarm",1,right_alarmCallback); 
     //some "magic numbers"
     double sample_dt = 0.01; //specify a sample period of 10ms  
-    double speed = 0.5; // 1m/s speed command
-    double yaw_rate = 0.5; //0.5 rad/sec yaw rate command
-    double time_3_sec = 3.0; // should move 3 meters or 1.5 rad in 3 seconds
+    double speed = 1; // 1m/s speed command
+    double yaw_rate = 1; //1 rad/sec yaw rate command
+    
     
       
     geometry_msgs::Twist twist_cmd; //this is the message type required to send twist commands to STDR 
@@ -55,28 +55,28 @@ int main(int argc, char **argv) {
     while(ros::ok()) { // do forever
         twist_cmd.angular.z=0.0; // do not spin 
         twist_cmd.linear.x=speed; //command to move forward
-        while(!(g_lidar_left_alarm && g_lidar_right_alarm)) { // keep moving forward until get an alarm signal
+        while(!(g_lidar_left_alarm || g_lidar_right_alarm)) { // keep moving forward until get an alarm signal
           twist_commander.publish(twist_cmd);
           timer+=sample_dt;
           ros::spinOnce();
           loop_timer.sleep();
         }
-        if(g_lidar_left_alarm) {
+	if(g_lidar_left_alarm) { //on recieving alarm from the left
           twist_cmd.linear.x=0.0; //stop moving forward
-          twist_cmd.angular.z=yaw_rate; //and start spinning in place
+          twist_cmd.angular.z=-yaw_rate; //and start spinning in place
           timer=0.0; //reset the timer
-          while(g_lidar_left_alarm) {
+          while(g_lidar_left_alarm) { // as long as the "threat" exists
           twist_commander.publish(twist_cmd);
           timer+=sample_dt;
           ros::spinOnce();
           loop_timer.sleep();
           }
           }
-          if(g_lidar_right_alarm) {
+         else if(g_lidar_right_alarm) { //on recieving alamr from the right
           twist_cmd.linear.x=0.0; //stop moving forward
-          twist_cmd.angular.z=-yaw_rate; //and start spinning in place
+          twist_cmd.angular.z=yaw_rate; //and start spinning in place
           timer=0.0; //reset the timer
-          while(g_lidar_right_alarm) {
+          while(g_lidar_right_alarm) { //as long as the "threat" exists
           twist_commander.publish(twist_cmd);
           timer+=sample_dt;
           ros::spinOnce();
