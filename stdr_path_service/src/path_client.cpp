@@ -164,7 +164,7 @@ int read_traj_file(string fname, nav_msgs::Path &nav_path) {
 int main(int argc, char **argv) {
     ros::init(argc, argv, "path_client");
     ros::NodeHandle n;
-    ros::ServiceClient client = n.serviceClient<example_ros_service::PathSrv>("path_service");
+    ros::ServiceClient client = n.serviceClient<stdr_path_service::PathSrv>("path_service");
     geometry_msgs::Quaternion quat;
     nav_msgs::Path des_path;
     while (!client.exists()) {
@@ -173,7 +173,7 @@ int main(int argc, char **argv) {
     }
 
     ROS_INFO("connected client to service");
-    example_ros_service::PathSrv path_srv;
+    stdr_path_service::PathSrv path_srv;
     std::string ros_ws_path = getenv("ROS_WORKSPACE");
 	std::string path_to_file= ros_ws_path+"/src/stdr_path_service/stdr_poses.jsp";
 	if(0==read_traj_file(path_to_file.c_str(), des_path)) {

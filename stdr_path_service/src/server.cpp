@@ -8,7 +8,7 @@
 // i.e., equivalent to expressing subgoals in odom frame
 
 #include <ros/ros.h>
-#include <example_ros_service/PathSrv.h>
+#include <stdr_path_service/PathSrv.h>
 #include <nav_msgs/Path.h>
 #include <geometry_msgs/Pose.h>
 #include <geometry_msgs/Twist.h>
@@ -126,7 +126,7 @@ dist = sqrt((goal_pose.position.x-current_pose.position.x)*(goal_pose.position.x
 }
 
 
-bool callback(example_ros_service::PathSrvRequest& request, example_ros_service::PathSrvResponse& response)
+bool callback(stdr_path_service::PathSrvRequest& request, stdr_path_service::PathSrvResponse& response)
 {
     ROS_INFO("callback activated");
     double yaw_desired, yaw_current, travel_distance, spin_angle;
@@ -158,7 +158,7 @@ bool callback(example_ros_service::PathSrvRequest& request, example_ros_service:
         do_spin(spin_angle); // carry out this incremental action
         // we will just assume that this action was successful--really should have sensor feedback here
         g_current_pose.orientation = pose_desired.orientation; // assumes got to desired orientation precisely
-        
+        g_current_pose.position = pose_desired.position;
         //FIX THE NEXT LINE, BASED ON get_yaw_and_dist()
         do_move(travel_distance);  // move forward 1m...just for illustration; SHOULD compute this from subgoal pose
         }
