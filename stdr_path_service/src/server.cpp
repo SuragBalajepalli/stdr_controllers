@@ -157,8 +157,8 @@ bool callback(stdr_path_service::PathSrvRequest& request, stdr_path_service::Pat
         spin_angle = min_spin(spin_angle);// but what if this angle is > pi?  then go the other way
         do_spin(spin_angle); // carry out this incremental action
         // we will just assume that this action was successful--really should have sensor feedback here
-        g_current_pose.orientation = pose_desired.orientation; // assumes got to desired orientation precisely
-        g_current_pose.position = pose_desired.position;
+        g_current_pose = pose_desired; // assumes got to desired orientation precisely
+        
         //FIX THE NEXT LINE, BASED ON get_yaw_and_dist()
         do_move(travel_distance);  // move forward 1m...just for illustration; SHOULD compute this from subgoal pose
         }
