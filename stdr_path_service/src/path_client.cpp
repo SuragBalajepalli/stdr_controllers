@@ -2,7 +2,7 @@
 // illustrates how to send a request to the path_service service
 
 #include <ros/ros.h>
-#include <example_ros_service/PathSrv.h> // this message type is defined in the current package
+#include <stdr_path_service/PathSrv.h> // this message type is defined in the current package
 #include <iostream>
 #include <string>
 #include <nav_msgs/Path.h>
